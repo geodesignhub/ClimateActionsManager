@@ -7,20 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Geodesignhub Dashboard</title>
+    <title>Geodesignhub Tags Manager</title>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
-    <link href='assets/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
-    <link href='assets/css/buttons.dataTables.min.css' rel='stylesheet' type='text/css'>
     <link href='assets/css/flatty.css' rel='stylesheet' type='text/css'>
     <link href='assets/css/base.css' rel='stylesheet' type='text/css'>
     <style type="text/css">
-        #wrapper {
-            width: 1200px;
-            margin: 0 auto;
-            overflow: hidden;
-        }
-
+        
         .pull-right {
             float: right;
         }
@@ -51,7 +44,7 @@
             <!-- Static navbar -->
             <!-- Main component for a primary marketing message or call to action -->
             <br>
-            <h1>Geodesignhub Dashboard</h1>
+            <h1>Geodesignhub Tags Helper</h1>
             <br>
             <p>This is a text based dashboard of your Geodesignhub project via the <a
                     href="http://www.geodesignhub.com/api/" target="_blank">Geodesignhub API</a> experiment to. In
@@ -64,128 +57,58 @@
     <br>
     <div class="container">
         <section>
-            <br><br>
-            <table id="dTable" class="cell-border display"></table>
+        
+            <br>
+            <h2>All Tags</h2>
+            <br>
+            <div id="tags-list">
+                <ul class="list">
+                    <% var tags_len = data[2].length;
+                    if (tags_len !== 0) {
+                        for (var j1 = 0; j1 < tags_len; j1++ ) { 
+                        var current_tag = data[2][j1]; 
+                        
+                    %>
+                    <li>
+                        <p id="<%=current_tag.id %>"><%= current_tag.tag %></p>
+                    </li>
+                  <% } } %>
+                  
+                </ul>
+              </div>
         </section>
 
 
         <section>
             <br>
+            <h2>All Diagrams</h2>
             <br>
+            
+            <div id="diagrams-list">
+                <ul class="list">
+                    <% var diag_len = data[1].length;
+                    if (diag_len !== 0) {
+                        for (var j = 0; j < diag_len; j++ ) { 
+                        var current_diagram = data[1][j]; 
+                        %>
+                  <li>
+                     <p class="name"><%= current_diagram.worlddescription %></p>
+                     <p class="city"><%= current_diagram.system_name %> <%= current_diagram.rank %></p>
+                  </li>
+                  <% } } %>                  
+                  
+                </ul>
+              </div>
         </section>
 
 
+        <section>
+            <br>
+        </section>
     </div>
-    <script src="assets/js/jquery.min.js"></script>
-    <script type="text/javascript" src="assets/js/jquery.dataTables.min.js"></script>
+    
     <script src="assets/js/humane.min.js"></script>
-    <script type="text/javascript">
-        var dataTable;
-        let data = <%- JSON.stringify(data) %>;
-        var status = <%- status %>;
-        if (status) {
-
-            populateDesignGrid(data[0], data[1]);
-            humane.log("Project Data populated", {
-                addnCls: 'humane-flatty-success'
-            });
-
-        } else {
-            humane.log("Error in getting project data. Please check your project id and credentials.", {
-                addnCls: 'humane-flatty-error'
-            });
-
-        }
-
-
-        function populateDesignGrid(systems, diagrams) {
-
-            var fields = [];
-            var syslen = systems.length;
-            for (var k1 = 0; k1 < syslen; k1++) {
-                var curSys = systems[k1];
-                fields.push({
-                    "title": curSys.sysname,
-                    "width": "15%"
-                });
-            }
-
-            var diagData = [];
-            var fieldlen = fields.length;
-            var diaglen = diagrams.length;
-            var allRanks = [];
-            Array.max = function (array) {
-                return Math.max.apply(Math, array);
-            };
-            for (var l1 = 0; l1 < diaglen; l1++) {
-                var curRank = diagrams[l1].rank;
-                allRanks.push(curRank);
-            }
-            // we now have the number of rows;
-            var numRows = Array.max(allRanks);
-            // initialize a empty row. 
-            var emptyDataset = [];
-            for (var j1 = 0; j1 < numRows; j1++) {
-                var curRow = [];
-                for (var n1 = 0; n1 < fieldlen; n1++) {
-                    curRow.push('');
-                }
-                emptyDataset.push(curRow);
-            }
-
-            var rows = emptyDataset.length;
-
-            for (var u1 = 0; u1 < diaglen; u1++) {
-                var curDiag = diagrams[u1];
-                var diagRank = curDiag.rank;
-                var diagRow = diagRank - 1;
-                var diagSysid = curDiag.sysid;
-                var column;
-                for (var k2 = 0; k2 < syslen; k2++) {
-                    var curSystem = systems[k2];
-                    if (diagSysid === curSystem.id) {
-                        column = k2;
-                        break;
-                    }
-                }
-                // we now have a column of the entry, identify the row.
-
-                for (var row = 0; row < rows; row++) {
-                    if (row === diagRow) {
-                        for (var col = 0; col < fieldlen; col++) {
-                            if (col === column) {
-                                var projectid = $("#projectid").val();
-
-                                emptyDataset[row][column] = "<b>" + diagRank + "</b>&nbsp;&nbsp;" + curDiag
-                                    .worlddescription + "<br><small>Author&nbsp;:&nbsp;" + curDiag.author +
-                                    "&nbsp;&nbsp;&nbsp;&nbsp; ID: " + curDiag.id + "</small> ";
-                                break;
-                            }
-
-                        }
-                    }
-                }
-
-
-            }
-
-            if (dataTable) {
-                dataTable.destroy();
-            }
-
-            dataTable = $("#dTable").DataTable({
-                "dom": 'Bfrtip',
-                "ordering": false,
-                "searching": true,
-                "autoWidth": false,
-                "paging": true,
-                "info": false,
-                "lengthMenu": [100],
-                data: emptyDataset,
-                columns: fields
-            });
-        }
-    </script>
+    
 </body>
 
 </html>

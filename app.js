@@ -1,6 +1,5 @@
 var express = require("express");
-var req = require('request');
-var async = require('async');
+
 var bodyParser = require('body-parser');
 var app = express();
 var ejs = require('ejs');
@@ -13,9 +12,22 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json())
 
-// var baseurl = 'http://local.test:8000/api/v1/projects/';
-var baseurl = 'https://www.geodesignhub.com/api/v1/projects/';
+var baseurl = 'http://local.test:8000/api/v1/projects/';
+// var baseurl = 'https://www.geodesignhub.com/api/v1/projects/';
 
+function getSystemName(systemsResponse, diagramSystem){
+    let systemName = '';
+    for (let index = 0; index < systemsResponse.length; index++) {
+        const currentSystem = systemsResponse[index];
+
+        if (currentSystem.id == diagramSystem){
+            systemName = currentSystem.sysname;
+            break;
+        }
+        
+    }
+    return systemName
+}
 app.get('/', function (request, response) {
 
     if (request.query.apitoken && request.query.projectid) {
@@ -26,40 +38,60 @@ app.get('/', function (request, response) {
         var cred = "Token " + api_token;
 
         var systems = baseurl + project_id + '/systems/';
-        var diagrams = baseurl + project_id + '/diagrams/';        
+        var diagrams = baseurl + project_id + '/diagrams/';
         var tags = baseurl + project_id + '/tags/';
 
         var URLS = [systems, diagrams, tags];
+        let axios_instance = axios.create({
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': cred
+            }
+        });
+        const systemsRequest = axios_instance.get(systems);
+        const diagramsRequest = axios_instance.get(diagrams);
+        const tagsRequest = axios_instance.get(tags);
 
-        async.map(URLS, function (url, done) {
-            req({
-                url: url,
-                headers: {
-                    "Authorization": cred,
-                    "Content-Type": "application/json"
-                }
-            }, function (err, response, body) {
-                if (err || response.statusCode !== 200) {
-                    if (response.statusCode == 429) {
-                        return done(err || new Error("Too many requests from your profie"));
-                    }
-                    else {
-                        return done(err || new Error());
-                    }
-                }
-                return done(null, JSON.parse(body));
-            });
-        }, function (err, results) {
+        axios.all([systemsRequest, diagramsRequest, tagsRequest]).then(axios.spread((...responses) => {
+            let  systemsResponse =[];
+            let  diagramsResponse =[];
+            let  tagsResponse =[];
+            if (responses[0].status == 200){
+             systemsResponse = responses[0].data;
+            }
+            if (responses[1].status == 200){
+                diagramsResponse = responses[1].data;
+            }
+            if (responses[2].status == 200){
+                tagsResponse = responses[2].data;
+            }
+            let allDiagramDetails = [];
+            for (let index = 0; index < diagramsResponse.length; index++) {
+                const currentDiagram = diagramsResponse[index];
+                const diagramSystem = currentDiagram.sysid;
+                const sysName = getSystemName(systemsResponse, diagramSystem);
+                currentDiagram['system_name'] = sysName;
+                allDiagramDetails.push(currentDiagram);
+                
+            }
+            allDiagramDetails.sort((a,b) => a.sysid - b.sysid); // b - a for reverse sort
 
-            if (err) return response.sendStatus(500);
-
+            
             response.render('index', {
                 "status": 1,
-                "data": results,
+                "data": [systemsResponse, allDiagramDetails, tagsResponse],
                 "api_token": api_token,
                 "project_id": project_id
             });
-        });
+            // use/access the results 
+        })).catch(errors => {
+            // react on errors.
+
+            if (errors) return response.sendStatus(500);
+        })
+
+
+
 
     } else {
         response.status(400).send('Not all parameters supplied.');
