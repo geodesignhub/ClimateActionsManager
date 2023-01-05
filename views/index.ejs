@@ -83,32 +83,42 @@
             <br>
             <h2>All Diagrams</h2>
             <br>
-            
-            <div id="diagrams-list">
-                <ul class="list">
-                    <% var diag_len = data[1].length;
-                    if (diag_len !== 0) {
-                        for (var j = 0; j < diag_len; j++ ) { 
-                        var current_diagram = data[1][j]; 
-                        %>
-                  <li>
-                     <p class="name"><%= current_diagram.worlddescription %></p>
-                     <p class="city"><%= current_diagram.system_name %> <%= current_diagram.rank %></p>
-                  </li>
-                  <% } } %>                  
-                  
-                </ul>
+                <div id="diagrams-list">
+                    <input class="search" placeholder="Search" />
+                        <ul class="list">
+                            <% var diag_len = data[1].length;
+                            if (diag_len !== 0) {
+                                for (var j = 0; j < diag_len; j++ ) { 
+                                var current_diagram = data[1][j]; 
+                            %>
+                        <li>
+                            <div>
+                                <input type="checkbox" id="<%= current_diagram.id %>" name="name">
+                                <label class="location" for="<%= current_diagram.id %>"><%= current_diagram.system_name %> <%= current_diagram.rank %><span class="name"> <%= current_diagram.worlddescription %></span>  </label>
+                                
+                            </div>
+                        </li>
+                        <% } } %>                  
+                        </ul>
               </div>
+       
         </section>
-
-
         <section>
             <br>
         </section>
     </div>
     
     <script src="assets/js/humane.min.js"></script>
-    
+    <script src="assets/js/list.min.js"></script>
+    <script type="text/javascript">
+        var options = {
+        valueNames: [ 'name', 'location' ]
+        };
+
+        var userList = new List('diagrams-list', options);
+
+
+    </script>
 </body>
 
 </html>
