@@ -28,6 +28,22 @@ function getSystemName(systemsResponse, diagramSystem){
     }
     return systemName
 }
+
+app.post('/update', function(request, response) {
+
+    var tags_diagrams = request.body.tags_diagrams;
+
+    var api_token = request.query.api_token;
+    var project_id = request.query.project_id;
+
+    response.render('success', {
+        
+        "api_token": api_token,
+        "project_id": project_id
+    });
+ 
+ });
+
 app.get('/', function (request, response) {
 
     if (request.query.apitoken && request.query.projectid) {

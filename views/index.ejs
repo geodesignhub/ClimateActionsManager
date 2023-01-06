@@ -46,20 +46,22 @@
             <br>
             <h1>Geodesignhub Tags Helper</h1>
             <br>
-            <p>This is a text based dashboard of your Geodesignhub project via the <a
-                    href="http://www.geodesignhub.com/api/" target="_blank">Geodesignhub API</a> experiment to. In
-                addition to showing the text based information about the individual diagrams, diagram notes can be
-                displayed as well. For more information, see the <a
-                    href="https://geodesignhub.github.io/dashboard">Github</a> page.</p><br>
+            <p>This is tool to apply multiple tags to multiple diagrams in Geodesignhub project via the <a
+                    href="http://www.geodesignhub.com/api/" target="_blank">Geodesignhub API</a>. When a new set of tags is applied, the existing tags will be removed from the diagram. For more information, see the <a
+                    href="https://geodesignhub.github.io/TagsHelper">Github</a> page.</p><br>
 
         </div>
     </div>
     <br>
     <div class="container">
+        <form method="POST" action="/update">
+            <input type="hidden" name="api_token" value="<%= api_token %>" />
+            <input type="hidden" name="project_id" value="<%= project_id %>" />
         <section>
         
             <br>
-            <h2>All Tags</h2>
+            <h2>Step 1. Select Tags</h2>
+            <p>A list of all tags defined in Geodesignhub for your project are below.</p>
             <br>
             <div id="tags-list">
                 <ul class="list">
@@ -70,7 +72,7 @@
                         
                     %>
                     <li>
-                        <p id="<%=current_tag.id %>"><%= current_tag.tag %></p>
+                        <p id="<%=current_tag.id %>"><input type="checkbox" id="<%= current_tag.id %>" name="tag"> <%= current_tag.tag %></p>
                     </li>
                   <% } } %>
                   
@@ -81,7 +83,7 @@
 
         <section>
             <br>
-            <h2>All Diagrams</h2>
+            <h2>Step 2. Select Diagrams</h2>
             <br>
                 <div id="diagrams-list">
                     <input class="search" placeholder="Search" />
@@ -105,9 +107,14 @@
         </section>
         <section>
             <br>
+            <h2>Step 3: Confirm</h2>
+            <br>
+            <button type="submit" class="button">Update Tags</button>
         </section>
+    </form>
     </div>
-    
+    <br>
+    <br><br><hr><br><br>
     <script src="assets/js/humane.min.js"></script>
     <script src="assets/js/list.min.js"></script>
     <script type="text/javascript">
@@ -116,8 +123,7 @@
         };
 
         var userList = new List('diagrams-list', options);
-
-
+    
     </script>
 </body>
 
