@@ -15,34 +15,63 @@ app.use(bodyParser.json())
 var baseurl = 'http://local.test:8000/api/v1/projects/';
 // var baseurl = 'https://www.geodesignhub.com/api/v1/projects/';
 
-function getSystemName(systemsResponse, diagramSystem){
+function getSystemName(systemsResponse, diagramSystem) {
     let systemName = '';
     for (let index = 0; index < systemsResponse.length; index++) {
         const currentSystem = systemsResponse[index];
 
-        if (currentSystem.id == diagramSystem){
+        if (currentSystem.id == diagramSystem) {
             systemName = currentSystem.sysname;
             break;
         }
-        
+
     }
     return systemName
 }
 
-app.post('/update', function(request, response) {
+app.post('/update', function (request, response) {
 
-    var tags_diagrams = request.body.tags_diagrams;
+    const selected_diagrams = request.body.diagrams;
+    const selected_tags = request.body.tags;
 
-    var api_token = request.query.api_token;
-    var project_id = request.query.project_id;
 
-    response.render('success', {
-        
-        "api_token": api_token,
-        "project_id": project_id
+    var api_token = request.body.api_token;
+    var project_id = request.body.project_id;
+
+    var cred = "Token " + api_token;
+    let axios_instance = axios.create({
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': cred
+        }
     });
- 
- });
+    const all_diagram_urls = [];
+
+    for (let d = 0; d < selected_diagrams.length; d++) {
+        const diagram_id = selected_diagrams[d];
+        const tags_url = baseurl + project_id + '/diagrams/' + diagram_id + '/tags/';
+
+        const request_post = axios_instance.post(tags_url, selected_tags);
+        all_diagram_urls.push(request_post);
+
+    }
+
+    axios.all(all_diagram_urls).then(axios.spread((...responses) => {
+
+        response.render('success', {
+
+            "api_token": api_token,
+            "project_id": project_id
+        });
+    })).catch(errors => {
+        // react on errors.
+
+        if (errors) return response.sendStatus(500);
+    });
+
+
+
+});
 
 app.get('/', function (request, response) {
 
@@ -69,16 +98,16 @@ app.get('/', function (request, response) {
         const tagsRequest = axios_instance.get(tags);
 
         axios.all([systemsRequest, diagramsRequest, tagsRequest]).then(axios.spread((...responses) => {
-            let  systemsResponse =[];
-            let  diagramsResponse =[];
-            let  tagsResponse =[];
-            if (responses[0].status == 200){
-             systemsResponse = responses[0].data;
+            let systemsResponse = [];
+            let diagramsResponse = [];
+            let tagsResponse = [];
+            if (responses[0].status == 200) {
+                systemsResponse = responses[0].data;
             }
-            if (responses[1].status == 200){
+            if (responses[1].status == 200) {
                 diagramsResponse = responses[1].data;
             }
-            if (responses[2].status == 200){
+            if (responses[2].status == 200) {
                 tagsResponse = responses[2].data;
             }
             let allDiagramDetails = [];
@@ -88,11 +117,11 @@ app.get('/', function (request, response) {
                 const sysName = getSystemName(systemsResponse, diagramSystem);
                 currentDiagram['system_name'] = sysName;
                 allDiagramDetails.push(currentDiagram);
-                
-            }
-            allDiagramDetails.sort((a,b) => a.sysid - b.sysid); // b - a for reverse sort
 
-            
+            }
+            allDiagramDetails.sort((a, b) => a.sysid - b.sysid); // b - a for reverse sort
+
+
             response.render('index', {
                 "status": 1,
                 "data": [systemsResponse, allDiagramDetails, tagsResponse],

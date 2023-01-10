@@ -72,7 +72,7 @@
                         
                     %>
                     <li>
-                        <p id="<%=current_tag.id %>"><input type="checkbox" id="<%= current_tag.id %>" name="tag"> <%= current_tag.tag %></p>
+                        <p id="<%=current_tag.id %>"><input type="checkbox" value ="<%= current_tag.id %>" id="<%= current_tag.id %>" name="tags"> <%= current_tag.tag %></p>
                     </li>
                   <% } } %>
                   
@@ -95,7 +95,7 @@
                             %>
                         <li>
                             <div>
-                                <input type="checkbox" id="<%= current_diagram.id %>" name="name">
+                                <input type="checkbox"value ="<%= current_diagram.id %>" id="<%= current_diagram.id %>" name="diagrams">
                                 <label class="location" for="<%= current_diagram.id %>"><%= current_diagram.system_name %> <%= current_diagram.rank %><span class="name"> <%= current_diagram.worlddescription %></span>  </label>
                                 
                             </div>
