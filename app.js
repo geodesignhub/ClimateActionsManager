@@ -29,6 +29,23 @@ function getSystemName(systemsResponse, diagramSystem) {
     return systemName
 }
 
+
+function getDiagramTags(tagsResponse, diagramID){
+    let relevantTags = [];
+    let existingTagsStr= ''
+    for (let index = 0; index < tagsResponse.length; index++) {
+        const currentTagDetails = tagsResponse[index];
+        const currentDiagrams = currentTagDetails['diagrams'];
+        if (currentDiagrams.includes(diagramID)){
+            
+            relevantTags.push(currentTagDetails['tag']);
+        }        
+    }
+
+    
+    return relevantTags;
+}
+
 app.post('/update', function (request, response) {
 
     const selected_diagrams = request.body.diagrams;
@@ -50,7 +67,6 @@ app.post('/update', function (request, response) {
     for (let d = 0; d < selected_diagrams.length; d++) {
         const diagram_id = selected_diagrams[d];
         const tags_url = baseurl + project_id + '/diagrams/' + diagram_id + '/tags/';
-
         const request_post = axios_instance.post(tags_url, selected_tags);
         all_diagram_urls.push(request_post);
 
@@ -114,8 +130,11 @@ app.get('/', function (request, response) {
             for (let index = 0; index < diagramsResponse.length; index++) {
                 const currentDiagram = diagramsResponse[index];
                 const diagramSystem = currentDiagram.sysid;
+                const diagramID = currentDiagram.id;
+                const allExistingTags = getDiagramTags(tagsResponse, diagramID);
                 const sysName = getSystemName(systemsResponse, diagramSystem);
                 currentDiagram['system_name'] = sysName;
+                currentDiagram['tags'] = allExistingTags;
                 allDiagramDetails.push(currentDiagram);
 
             }

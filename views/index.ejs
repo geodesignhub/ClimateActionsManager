@@ -44,7 +44,7 @@
             <!-- Static navbar -->
             <!-- Main component for a primary marketing message or call to action -->
             <br>
-            <h1>Geodesignhub Tags Helper</h1>
+            <h1># Geodesignhub Tags Helper</h1>
             <br>
             <p>This is tool to apply multiple tags to multiple diagrams in Geodesignhub project via the <a
                     href="http://www.geodesignhub.com/api/" target="_blank">Geodesignhub API</a>. When a new set of tags is applied, the existing tags will be removed from the diagram. For more information, see the <a
@@ -83,7 +83,8 @@
 
         <section>
             <br>
-            <h2>Step 2. Select Diagrams</h2>
+            <h2>Step 2. Select Diagrams </h2>
+            <p>Existing tags are displayed as highlights</p>
             <br>
                 <div id="diagrams-list">
                     <input class="search" placeholder="Search" />
@@ -92,11 +93,13 @@
                             if (diag_len !== 0) {
                                 for (var j = 0; j < diag_len; j++ ) { 
                                 var current_diagram = data[1][j]; 
+                                
+
                             %>
                         <li>
                             <div>
                                 <input type="checkbox"value ="<%= current_diagram.id %>" id="<%= current_diagram.id %>" name="diagrams">
-                                <label class="location" for="<%= current_diagram.id %>"><%= current_diagram.system_name %> <%= current_diagram.rank %><span class="name"> <%= current_diagram.worlddescription %></span>  </label>
+                                <label class="location" for="<%= current_diagram.id %>"><%= current_diagram.system_name %> <%= current_diagram.rank %><span class="name"> <%= current_diagram.worlddescription %></span> <% for (var i = 0; i < current_diagram.tags.length; i++) { %><small class="highlight">&nbsp;<%= current_diagram.tags[i] %>&nbsp;</small>&nbsp;&nbsp;<% } %> </label>
                                 
                             </div>
                         </li>

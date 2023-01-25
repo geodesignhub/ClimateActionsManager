@@ -221,7 +221,10 @@ tr.group:hover {
     margin: 0 auto;
     padding: 0 30px;
 }
-
+.highlight{
+    background-color: dimgrey;
+    color: #ffffff;
+}
 .invisible {
     display: none;
 }
