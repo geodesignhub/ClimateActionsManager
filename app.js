@@ -30,28 +30,33 @@ function getSystemName(systemsResponse, diagramSystem) {
 }
 
 
-function getDiagramTags(tagsResponse, diagramID){
+function getDiagramTags(tagsResponse, diagramID) {
     let relevantTags = [];
-    let existingTagsStr= ''
+    let existingTagsStr = ''
     for (let index = 0; index < tagsResponse.length; index++) {
         const currentTagDetails = tagsResponse[index];
         const currentDiagrams = currentTagDetails['diagrams'];
-        if (currentDiagrams.includes(diagramID)){
-            
+        if (currentDiagrams.includes(diagramID)) {
+
             relevantTags.push(currentTagDetails['tag']);
-        }        
+        }
     }
 
-    
+
     return relevantTags;
 }
 
 app.post('/update', function (request, response) {
 
-    const selected_diagrams = request.body.diagrams;
+    const raw_diagrams = request.body.diagrams;
     const selected_tags = request.body.tags;
-
-
+    let selected_diagrams = []
+    const is_array = Array.isArray(raw_diagrams);
+    if (is_array) {
+        console.log("Input diagrams OK..");
+    } else {
+        selected_diagrams = [raw_diagrams]
+    }
     var api_token = request.body.api_token;
     var project_id = request.body.project_id;
 
