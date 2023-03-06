@@ -166,16 +166,23 @@ h6 {
     font-family: "Raleway", serif;
 }
 
+
 a {
-    text-decoration: none;
-    color: #dc2850;
+    color: #00AED8;
 }
 
 a:hover {
-    color: #9e1a37;
+    color: #00AED8;
 }
 
+section {
+    padding-top: 20px;
+}
 
+.herounit {
+    background: #E5E4E2;
+    padding-bottom: 25px;
+}
 /* clear floated divs */
 
 .clearfix:after {
@@ -221,6 +228,19 @@ tr.group:hover {
     margin: 0 auto;
     padding: 0 30px;
 }
+.column {
+    float: left;
+    width: 50%;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
 .highlight{
     background-color: dimgrey;
     color: #ffffff;

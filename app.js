@@ -54,6 +54,7 @@ app.post('/update', function (request, response) {
     const is_array = Array.isArray(raw_diagrams);
     if (is_array) {
         console.log("Input diagrams OK..");
+        selected_diagrams = raw_diagrams;
     } else {
         selected_diagrams = [raw_diagrams]
     }
@@ -72,7 +73,7 @@ app.post('/update', function (request, response) {
     for (let d = 0; d < selected_diagrams.length; d++) {
         const diagram_id = selected_diagrams[d];
         const tags_url = baseurl + project_id + '/diagrams/' + diagram_id + '/tags/';
-        const request_post = axios_instance.post(tags_url, selected_tags);
+        const request_post = axios_instance.post(tags_url, [selected_tags]);
         all_diagram_urls.push(request_post);
 
     }

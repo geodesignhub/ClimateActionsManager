@@ -13,27 +13,8 @@
     <link href='assets/css/flatty.css' rel='stylesheet' type='text/css'>
     <link href='assets/css/base.css' rel='stylesheet' type='text/css'>
     <style type="text/css">
-        
-        .pull-right {
-            float: right;
-        }
 
-        a {
-            color: #00AED8;
-        }
 
-        a:hover {
-            color: #00AED8;
-        }
-
-        section {
-            padding-top: 20px;
-        }
-
-        .herounit {
-            background: #E5E4E2;
-            padding-bottom: 25px;
-        }
     </style>
 </head>
 
@@ -47,86 +28,106 @@
             <h1># Geodesignhub Tags Helper</h1>
             <br>
             <p>This is tool to apply multiple tags to multiple diagrams in Geodesignhub project via the <a
-                    href="http://www.geodesignhub.com/api/" target="_blank">Geodesignhub API</a>. When a new set of tags is applied, the existing tags will be removed from the diagram. For more information, see the <a
+                    href="http://www.geodesignhub.com/api/" target="_blank">Geodesignhub API</a>. When a new set of tags
+                is applied, the existing tags will be removed from the diagram. For more information, see the <a
                     href="https://geodesignhub.github.io/TagsHelper">Github</a> page.</p><br>
 
         </div>
     </div>
     <br>
     <div class="container">
+
+
+
         <form method="POST" action="/update">
             <input type="hidden" name="api_token" value="<%= api_token %>" />
             <input type="hidden" name="project_id" value="<%= project_id %>" />
-        <section>
-        
-            <br>
-            <h2>Step 1. Select Tags</h2>
-            <p>A list of all tags defined in Geodesignhub for your project are below.</p>
-            <br>
-            <div id="tags-list">
-                <ul class="list">
-                    <% var tags_len = data[2].length;
-                    if (tags_len !== 0) {
-                        for (var j1 = 0; j1 < tags_len; j1++ ) { 
-                        var current_tag = data[2][j1]; 
-                        
-                    %>
-                    <li>
-                        <p id="<%=current_tag.id %>"><input type="checkbox" value ="<%= current_tag.id %>" id="<%= current_tag.id %>" name="tags"> <%= current_tag.tag %></p>
-                    </li>
-                  <% } } %>
-                  
-                </ul>
-              </div>
-        </section>
+
+            <div class="row">
+            <h2>Instructions</h2><br>
+            <p>Select the tags that you want to apply on the right hand side to the diagrams on the right hand side (you can select multiple tags) and assign to multiple diagrams. Use the search box to filter diagrams and finally confirm your selections. </p>
+            <hr>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <section>
+
+                        <br>
+                        <h2>Step 1. Select Tags</h2>
+                        <p>A list of all tags defined in Geodesignhub for your project are below, select up to three tags.</p>
+                        <br>
+                        <div id="tags-list">
+                            <ul class="list">
+                                <% var tags_len=data[2].length; if (tags_len !==0) { for (var j1=0; j1 < tags_len; j1++
+                                    ) { var current_tag=data[2][j1]; %>
+                                    <li>
+                                        <p id="<%=current_tag.id %>"><input type="checkbox"
+                                                value="<%= current_tag.id %>" id="<%= current_tag.id %>" name="tags">
+                                            <%= current_tag.tag %>
+                                        </p>
+                                    </li>
+                                    <% } } %>
+
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+                <div class="column">
 
 
-        <section>
-            <br>
-            <h2>Step 2. Select Diagrams </h2>
-            <p>Existing tags are displayed as highlights</p>
-            <br>
-                <div id="diagrams-list">
-                    <input class="search" placeholder="Search" />
-                        <ul class="list">
-                            <% var diag_len = data[1].length;
-                            if (diag_len !== 0) {
-                                for (var j = 0; j < diag_len; j++ ) { 
-                                var current_diagram = data[1][j]; 
-                                
+                    <section>
+                        <br>
+                        <h2>Step 2. Select Diagrams </h2>
+                        <p>Existing tags are displayed as highlights</p>
+                        <br>
+                        <div id="diagrams-list">
+                            <input class="search" placeholder="Search Diagrams" />
+                            <ul class="list">
+                                <% var diag_len=data[1].length; if (diag_len !==0) { for (var j=0; j < diag_len; j++ ) {
+                                    var current_diagram=data[1][j]; %>
+                                    <li>
+                                        <div>
+                                            <input type="checkbox" value="<%= current_diagram.id %>"
+                                                id="<%= current_diagram.id %>" name="diagrams">
+                                            <label class="location" for="<%= current_diagram.id %>">
+                                                <%= current_diagram.system_name %>
+                                                    <%= current_diagram.rank %><span class="name"> <%= current_diagram.worlddescription %></span>
+                                                        <% for (var i=0; i < current_diagram.tags.length; i++) { %>
+                                                            <small class="highlight">&nbsp;<%= current_diagram.tags[i]%>&nbsp;</small>&nbsp;&nbsp;<% } %>
+                                            </label>
+                                        </div>
+                                    </li>
+                                    <% }} %>
+                            </ul>
+                        </div>
 
-                            %>
-                        <li>
-                            <div>
-                                <input type="checkbox"value ="<%= current_diagram.id %>" id="<%= current_diagram.id %>" name="diagrams">
-                                <label class="location" for="<%= current_diagram.id %>"><%= current_diagram.system_name %> <%= current_diagram.rank %><span class="name"> <%= current_diagram.worlddescription %></span> <% for (var i = 0; i < current_diagram.tags.length; i++) { %><small class="highlight">&nbsp;<%= current_diagram.tags[i] %>&nbsp;</small>&nbsp;&nbsp;<% } %> </label>
-                                
-                            </div>
-                        </li>
-                        <% } } %>                  
-                        </ul>
-              </div>
-       
-        </section>
-        <section>
-            <br>
-            <h2>Step 3: Confirm</h2>
-            <br>
-            <button type="submit" class="button">Update Tags</button>
-        </section>
-    </form>
+                    </section>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <section>
+                    <br>
+                    <h2>Step 3: Confirm</h2>
+                    <br>
+                    <button type="submit" class="button">Update Tags</button>
+                </section>
+            </div>
+
+        </form>
     </div>
     <br>
-    <br><br><hr><br><br>
+    <br><br>
+    <hr><br><br>
     <script src="assets/js/humane.min.js"></script>
     <script src="assets/js/list.min.js"></script>
     <script type="text/javascript">
         var options = {
-        valueNames: [ 'name', 'location' ]
+            valueNames: ['name', 'location']
         };
-
         var userList = new List('diagrams-list', options);
-    
+
     </script>
 </body>
 
