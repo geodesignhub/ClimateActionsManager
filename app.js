@@ -170,4 +170,66 @@ app.get('/', function (request, response) {
 });
 
 
+app.get('/design', function (request, response) {
+
+    if (request.query.apitoken && request.query.projectid) {
+
+        var api_token = request.query.apitoken;
+        var project_id = request.query.projectid;
+        var cteam_id = request.query.cteamid;
+        var synthesis_id = request.query.synthesisid;
+
+        var cred = "Token " + api_token;
+
+        var systems = baseurl + project_id + '/systems/';
+        var design = baseurl + project_id + '/cteams/' + cteam_id + '/' + synthesis_id + '/';
+        var tags = baseurl + project_id + '/tags/';
+
+        var URLS = [systems, diagrams, tags];
+        let axios_instance = axios.create({
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': cred
+            }
+        });
+        const systemsRequest = axios_instance.get(systems);
+        const designRequest = axios_instance.get(design);
+        const tagsRequest = axios_instance.get(tags);
+
+        axios.all([systemsRequest, designRequest, tagsRequest]).then(axios.spread((...responses) => {
+            let systemsResponse = [];
+            let designResponse = [];
+            let tagsResponse = [];
+            if (responses[0].status == 200) {
+                systemsResponse = responses[0].data;
+            }
+            if (responses[1].status == 200) {
+                designResponse = responses[1].data;
+            }
+            if (responses[2].status == 200) {
+                tagsResponse = responses[2].data;
+            }   
+
+            response.render('index', {
+                "status": 1,
+                "data": [systemsResponse, designResponse, tagsResponse],
+                "api_token": api_token,
+                "project_id": project_id
+            });
+            // use/access the results 
+        })).catch(errors => {
+            // react on errors.
+
+            if (errors) return response.sendStatus(500);
+        })
+
+
+
+
+    } else {
+        response.status(400).send('Not all parameters supplied.');
+
+    };
+});
+
 app.listen(process.env.PORT || 5001);
