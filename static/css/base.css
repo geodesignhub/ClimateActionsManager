@@ -165,7 +165,9 @@ h6 {
     font-weight: 700;
     font-family: "Raleway", serif;
 }
-
+.hidden {
+    display: none;
+}
 
 a {
     color: #00AED8;
@@ -194,6 +196,9 @@ section {
 tr.group,
 tr.group:hover {
     background-color: #ddd !important;
+}
+#map{
+    height:400px;
 }
 /* ============================================================
   TEMPLATE
