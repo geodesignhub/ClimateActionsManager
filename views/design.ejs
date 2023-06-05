@@ -53,7 +53,7 @@
                     </section>                   
 
                     <section>
-                        <div id="diagrams-list">s
+                        <div id="diagrams-list">
                                 <ul class="list">
                                     <% var diag_len=data[1]['features'].length; if (diag_len !==0) { for (var j=0; j < diag_len; j++ ) {
                                         var current_feature=data[1]['features'][j]; 
@@ -181,6 +181,9 @@
     }    
     function showAllDiagrams(){
         diagramsList.filter();
+        
+        map.fitBounds([[b[1], b[0]],[b[3], b[2]]]);
+
     }
     function miniMapstyleComp(feature) {
         var curFeature = feature.geometry.type;
@@ -234,6 +237,8 @@
             
             layer.on('click', function (e) {
                 // e = event
+                
+                map.fitBounds(layer.getBounds());
                 let diagram_id = e.target.feature.properties.diagramid;
                 filterDiagramList(diagram_id);
                 // show existing tag codes
