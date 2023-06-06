@@ -37,95 +37,106 @@
     </div>
     <br>
     <div class="container">
-            <div class="row">
+        <div class="row">
             <h2>Instructions</h2><br>
-            <p>Select the tags that you want to apply on the right hand side to the diagrams on the right hand side (you can select multiple tags) and assign to multiple diagrams. Use the search box to filter diagrams and finally confirm your selections. </p>
+            <p>Select the tags that you want to apply on the right hand side to the diagrams on the right hand side (you
+                can select multiple tags) and assign to multiple diagrams. Use the search box to filter diagrams and
+                finally confirm your selections. </p>
             <hr>
-            </div>
-            <div class="row">
-                <div class="column">
-                    <br>
-                    <h2>Step 1. Select a Diagram from your design</h2>
-                    <p>Click on any diagram on the map.</p>
-                    <br>
-                    <section>
-                        <div id="map"></div>
-                    </section>                   
+        </div>
+        <div class="row">
+            <div class="column">
+                <br>
+                <h2>Step 1. Select a Diagram from your design</h2>
+                <p>Click on any diagram on the map.</p>
+                <br>
+                <section>
+                    <div id="map"></div>
+                </section>
 
-                    <section>
-                        <div id="diagrams-list">
-                                <ul class="list">
-                                    <% var diag_len=data[1]['features'].length; if (diag_len !==0) { for (var j=0; j < diag_len; j++ ) {
-                                        var current_feature=data[1]['features'][j]; 
-                                        let added_diagrams= [];                                     
-                                        
-                                        var feature_props = current_feature['properties'];
-                                        var diagram_id = feature_props['diagramid'];                                        
-                                    %>
-                                        <li>                                        
-                                        
-                                            <% if (added_diagrams.includes(diagram_id)) { } else { %>
-                                                <span class="hidden diagram_id"><%- diagram_id %></span>    
-                                                    <p><%= feature_props.sysname %>
-                                                    <span class="name"> <%= feature_props.description %></span>
-                                                            <% let tag_codes = feature_props.tag_codes;
-                                                            if (tag_codes)
-                                                            {
-                                                            let tag_codes_split = tag_codes.split("|");
-                                                            for (var i=0; i < tag_codes_split.length; i++) { %>
-                                                                <small class="highlight">&nbsp;<%= tag_codes_split[i]%>&nbsp;</small>&nbsp;&nbsp;
-                                                                <% added_diagrams.push(diagram_id); 
-                                                            }} %>
-                                                        </p>
-                                            <% } %>
-                                        </li>
-                                        <% }} %>
-                                </ul>
-                                <br>
-                                <button onclick="showAllDiagrams()">Show all Diagrams</button>
-                                <br>
-                        </div>
+                <section>
+                    <div id="diagrams-list">
+                        <ul class="list">
+                            <% var diag_len=data[1]['features'].length; if (diag_len !==0) { for (var j=0; j < diag_len;
+                                j++ ) { var current_feature=data[1]['features'][j]; let added_diagrams=[]; var
+                                feature_props=current_feature['properties']; var diagram_id=feature_props['diagramid'];
+                                %>
+                                <li>
 
-                    </section>
-                </div>
-                
-                <div class="column">
-                    <section>
-                        <h2>Step 2. Apply Climate Actions</h2>
-                        <p>A list of all climate actions defined in Geodesignhub for your project are below, select up to three climate actions.</p>
-                        <br>
-                        <div id="tags-list">
-                            <ul class="list">
-                                <% var tags_len=data[2].length; if (tags_len !==0) { for (var j1=0; j1 < tags_len; j1++
-                                    ) { var current_tag=data[2][j1]; %>
-                                    <li>
-                                        <p id="cont-<%=current_tag.id %>"><input type="checkbox"
-                                                value="<%= current_tag.id %>" id="<%= current_tag.id %>" name="tags">
-                                                <small class="highlight">&nbsp;<%= current_tag.code %>&nbsp;</small>&nbsp;<%= current_tag.tag %>
+                                    <% if (added_diagrams.includes(diagram_id)) { } else { %>
+                                        <span class="hidden diagram_id"><%- diagram_id %></span>
+                                        <p id='<%- diagram_id %>-diag-cont'>
+                                            <%= feature_props.sysname %>
+                                                <span class="name">
+                                                    <%= feature_props.description %>
+                                                </span>
+                                                <% let tag_codes=feature_props.tag_codes; if (tag_codes) { let
+                                                    tag_codes_split=tag_codes.split("|"); for (var i=0; i <
+                                                    tag_codes_split.length; i++) { %>
+
+                                                    <small id='<%- diagram_id %>-<%= tag_codes_split[i] %>'
+                                                        class="highlight">
+                                                        <%= tag_codes_split[i] %>
+                                                    </small>
+
+                                                    <% added_diagrams.push(diagram_id); }} %>
                                         </p>
-                                    </li>
-                                    <% } } %>
-
-                            </ul>
-                        </div>
-                    </section>
-                </div>
-            </div>
-                
-            <input type="hidden" name="api_token" value="<%= api_token %>" />
-            <input type="hidden" name="project_id" value="<%= project_id %>" />
-    
-                <div class="row">
-
-                    <section>
+                                        <% } %>
+                                </li>
+                                <% }} %>
+                        </ul>
                         <br>
-                        <h2>Step 3: Confirm</h2>
+                        <button onclick="showAllDiagrams()">Show all Diagrams</button>
                         <br>
-                        <button type="submit" class="button">Update Tags</button>
-                    </section>
-                </div>
+                    </div>
+
+                </section>
             </div>
-            
+
+            <div class="column">
+                <section>
+                    <h2>Step 2. Apply Climate Actions</h2>
+                    <p>A list of all climate actions defined in Geodesignhub for your project are below, select up to
+                        three climate actions.</p>
+                    <br>
+                    <div id="tags-list">
+                        <ul class="list">
+                            <% var tags_len=data[2].length; if (tags_len !==0) { for (var j1=0; j1 < tags_len; j1++ ) {
+                                var current_tag=data[2][j1]; %>
+                                <li>
+                                    <p id="cont-<%=current_tag.id %>"><input type="checkbox"
+                                            value="<%= current_tag.id %>" id="<%= current_tag.id %>" name="tags">
+                                        <small class="highlight">&nbsp;<%= current_tag.code %>&nbsp;</small>&nbsp;<%=
+                                            current_tag.tag %>
+                                    </p>
+                                </li>
+                                <% } } %>
+
+                        </ul>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <input type="hidden" name="api_token" value="<%= api_token %>" />
+        <input type="hidden" name="project_id" value="<%= project_id %>" />
+
+        <div class="row">
+
+            <section>
+                <br>
+                <h2>Step 3: Confirm</h2>
+                <br>
+                <form action="/bulk_update" method="POST">
+                    <input type="hidden" id="map_state_ele" name="map_state_ele" value="{}">
+                    <input type="hidden" id="api_token" name="api_token" value="<%- api_token %>">
+                    <input type="hidden" id="project_id" name="project_id" value="<%- project_id %>">
+                    <input type="submit" class="button" value="Update Tags">
+                </form>
+            </section>
+        </div>
+    </div>
+
 
     </div>
     <br>
@@ -135,16 +146,16 @@
     <script src="/assets/js/leaflet.js"></script>
     <script src="/assets/js/svg/svg.min.js"></script>
     <script src="/assets/js/list.min.js"></script>
-  
+
 </body>
 <script type="text/javascript">
-    
+
     var options = {
-        valueNames: [ 'diagram_id']
-        
-        };
+        valueNames: ['diagram_id']
+
+    };
     var diagramsList = new List('diagrams-list', options);
-    let map_state ={};
+    let map_state = {};
     let map = L.map('map', {
         zoomControl: true,
         minZoom: 6,
@@ -153,15 +164,18 @@
         dragging: false,
         zoomControl: false,
         doubleClickZoom: false,
-        attributionControl: false});
+        attributionControl: false
+    });
     let bnds = '<%= bounds %>';
     const design_gj = <%- JSON.stringify(data[1]) %>;
     const tag_details = <%- JSON.stringify(data[2]) %>;
+
+    let tag_details_length = tag_details.length;
     let b = bnds.split(',');
-    
-    map.fitBounds([[b[1], b[0]],[b[3], b[2]]]);
 
+    map.fitBounds([[b[1], b[0]], [b[3], b[2]]]);
 
+    let selectedDiagram = 0;
     var svgDrawing = SVG().addTo('body').size(10, 10);
 
     var designLayer = new L.FeatureGroup();
@@ -170,19 +184,24 @@
         maxZoom: 18,
     }).addTo(map);
 
-    function filterDiagramList(diagram_id){
-        diagramsList.filter(function(item) {               
+    function filterDiagramList(diagram_id) {
+        diagramsList.filter(function (item) {
             if (item.values().diagram_id == diagram_id) {
                 return true;
             } else {
                 return false;
             }
         });
-    }    
-    function showAllDiagrams(){
+    }
+    function showAllDiagrams() {
         diagramsList.filter();
-        
-        map.fitBounds([[b[1], b[0]],[b[3], b[2]]]);
+        map.fitBounds([[b[1], b[0]], [b[3], b[2]]]);
+        selectedDiagram = 0;
+
+        var checkboxes = document.getElementsByName('tags');
+        for (var checkbox of checkboxes) {
+            checkbox.checked = false;
+        }
 
     }
     function miniMapstyleComp(feature) {
@@ -233,34 +252,38 @@
             // Filter the list with the diagram ID
             let diagram_id = feature.properties.diagramid;
             let tag_codes = feature.properties.tag_codes;
-            map_state[diagram_id] = tag_codes;
-            
+            let tag_codes_list = tag_codes.split('|');
+            let tag_codes_ids = convert_codes_to_ids(tag_codes_list);
+            let tag_codes_id_str = tag_codes_ids.join('|');
+            map_state[diagram_id] = tag_codes_id_str;
+
             layer.on('click', function (e) {
                 // e = event
-                
                 map.fitBounds(layer.getBounds());
                 let diagram_id = e.target.feature.properties.diagramid;
+                selectedDiagram = diagram_id;
                 filterDiagramList(diagram_id);
                 // show existing tag codes
-                let tag_codes = e.target.feature.properties.tag_codes;
-                let tag_codes_sel = tag_codes.split('|');
+                let tag_codes = map_state[diagram_id];
 
-                let tag_details_length = tag_details.length;
-                //uncheck everything
-            
                 var checkboxes = document.getElementsByName('tags');
                 for (var checkbox of checkboxes) {
                     checkbox.checked = false;
                 }
+                if (tag_codes.length > 0) {
+                    let tag_codes_sel = tag_codes.split('|');
 
-                for (let index = 0; index < tag_codes_sel.length; index++) {
-                    const selected_code = tag_codes_sel[index];
-                    for (let idx2 = 0; idx2 < tag_details_length; idx2++) {
-                        const current_tag = tag_details[idx2];
-                        if (current_tag.code == selected_code) {
-                            document.getElementById(current_tag.id).checked = true;
-                            break
-                        }                    
+                    //uncheck everything
+
+                    for (let index = 0; index < tag_codes_sel.length; index++) {
+                        const selected_code = tag_codes_sel[index];
+                        for (let idx2 = 0; idx2 < tag_details_length; idx2++) {
+                            const current_tag = tag_details[idx2];
+                            if (current_tag.id == selected_code) {
+                                document.getElementById(current_tag.id).checked = true;
+                                break
+                            }
+                        }
                     }
                 }
             });
@@ -271,7 +294,102 @@
         style: miniMapstyleComp,
     }).addTo(map);
 
-    // Render tag codes 
+    function convert_codes_to_ids(codes_list) {
+        let ids_list = [];
+        for (let index = 0; index < codes_list.length; index++) {
+            let current_code = codes_list[index];
+            for (let idx = 0; idx < tag_details_length; idx++) {
+                const selected_tag = tag_details[idx];
+                if (selected_tag.code == current_code) {
+                    ids_list.push(selected_tag.id);
+                }
+            }
+
+        }
+        return ids_list;
+    }
+
+    // Render tag codes
+    var all_tag_cbs = document.getElementsByName('tags');
+    for (let index = 0; index < all_tag_cbs.length; index++) {
+        const checkbox = all_tag_cbs[index];
+        checkbox.addEventListener('change', (event) => {
+            if (selectedDiagram != 0) {
+                if (event.currentTarget.checked) {
+                    let climate_action_id = event.currentTarget.id;
+                    for (let index = 0; index < tag_details_length; index++) {
+                        const selected_code = tag_details[index];
+                        if (selected_code.id == climate_action_id) {
+                            const selected_diagram_id = selectedDiagram;
+                            let selected_cont_id = selected_diagram_id + '-diag-cont';
+                            let selected_cont = document.getElementById(selected_cont_id);
+                            let tag_code_small = document.createElement('small');
+                            tag_code_small.id = selected_diagram_id + '-' + selected_code.code;
+                            tag_code_small.classList.add('highlight');
+                            tag_code_small.innerHTML = selected_code.code;
+                            selected_cont.appendChild(tag_code_small);
+                            // add code from map state
+                            let current_states = map_state[selected_diagram_id];
+                            let current_state_list = [];
+                            if (current_states.length > 0) {
+                                current_state_list = current_states.split('|');
+                                current_state_list.push(selected_code.id);
+                            }
+                            else {
+                                current_state_list = [selected_code.id];
+                            }
+                            let filtered_list = current_state_list.filter(n => n);
+
+                            let new_state_str = "";
+                            if (filtered_list.length > 0) {
+                                new_state_str = filtered_list.join('|');
+                            }
+
+                            map_state[selected_diagram_id] = new_state_str;
+                            let map_state_cont = document.getElementById("map_state_ele")
+                            map_state_cont.value = JSON.stringify(map_state);
+                            break;
+                        }
+
+                    }
+                }
+                else {
+                    // remove this climate action to the diagram                      
+
+                    let climate_action_id = event.currentTarget.id;
+                    for (let index = 0; index < tag_details_length; index++) {
+                        const selected_code = tag_details[index];
+                        if (selected_code.id == climate_action_id) {
+                            const selected_diagram_id = selectedDiagram;
+                            let selected_cont_id = selected_diagram_id + '-' + selected_code.code;
+                            let selected_cont = document.getElementById(selected_cont_id);
+                            selected_cont.remove();
+                            // remove code from map state
+                            let current_states = map_state[selected_diagram_id];
+                            let current_state_list = current_states.split('|');
+
+                            let new_state_list = current_state_list.filter(function (item) {
+                                return item !== selected_code.id
+                            });
+
+
+                            let new_state_str = new_state_list.join('|');
+
+
+                            map_state[selected_diagram_id] = new_state_str;
+
+                            let map_state_cont = document.getElementById("map_state_ele")
+                            map_state_cont.value = JSON.stringify(map_state);
+
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+
 
 
 </script>
