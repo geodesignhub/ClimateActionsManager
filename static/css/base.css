@@ -249,6 +249,9 @@ tr.group:hover {
 .highlight{
     background-color: dimgrey;
     color: #ffffff;
+    margin-left:4px;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 .invisible {
     display: none;
