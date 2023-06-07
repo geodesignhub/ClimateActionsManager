@@ -26,7 +26,7 @@
             <!-- Static navbar -->
             <!-- Main component for a primary marketing message or call to action -->
             <br>
-            <h1># IGC Climate Actions </h1>
+            <h1># IGC Climate Actions Manger </h1>
             <br>
             <p>This is tool to apply multiple climate actions to diagrams in a Geodesignhub project via the <a
                     href="http://www.geodesignhub.com/api/" target="_blank">Geodesignhub API</a>. When a new set of tags
@@ -39,9 +39,7 @@
     <div class="container">
         <div class="row">
             <h2>Instructions</h2><br>
-            <p>Select the tags that you want to apply on the right hand side to the diagrams on the right hand side (you
-                can select multiple tags) and assign to multiple diagrams. Use the search box to filter diagrams and
-                finally confirm your selections. </p>
+            <p>Select the diagram on the map and then select the climate actions that you want to apply on the right hand side to the. Finally dont forget to confirm your selections. </p>
             <hr>
         </div>
         <div class="row">
@@ -96,8 +94,7 @@
             <div class="column">
                 <section>
                     <h2>Step 2. Apply Climate Actions</h2>
-                    <p>A list of all climate actions defined in Geodesignhub for your project are below, select up to
-                        three climate actions.</p>
+                    <p>A list of all climate actions defined in Geodesignhub for your project are below, select up to three climate actions.</p>
                     <br>
                     <div id="tags-list">
                         <ul class="list">
@@ -126,6 +123,7 @@
             <section>
                 <br>
                 <h2>Step 3: Confirm</h2>
+                <p>Submit your actions to Geodesignhub, your project will be updated with the actions you have selected.</p>
                 <br>
                 <form action="/bulk_update" method="POST">
                     <input type="hidden" id="map_state_ele" name="map_state_ele" value="{}">
