@@ -170,6 +170,9 @@
         doubleClickZoom: false,
         attributionControl: false
     });
+    let attribution = L.control.attribution({'prefix': false});
+    attribution.addAttribution('&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>');
+    attribution.addTo(map);
     let bnds = '<%= bounds %>';
     const design_gj = <%- JSON.stringify(data[1]) %>;
     const tag_details = <%- JSON.stringify(data[2]) %>;
