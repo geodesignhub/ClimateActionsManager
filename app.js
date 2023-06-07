@@ -50,6 +50,8 @@ app.post('/bulk_update', function (request, response) {
 
     var api_token = request.body.api_token;
     var project_id = request.body.project_id;
+    var cteam_id = request.body.cteam_id;
+    var synthesis_id = request.body.synthesis_id;
 
     var cred = "Token " + api_token;
     let axios_instance = axios.create({
@@ -74,7 +76,9 @@ app.post('/bulk_update', function (request, response) {
     axios.all(all_diagram_urls).then(axios.spread((...responses) => {
         response.render('success', {
             "api_token": api_token,
-            "project_id": project_id
+            "project_id": project_id,
+            "cteam_id": cteam_id,
+            "synthesis_id": synthesis_id
         });
     })).catch(errors => {
         // react on errors.
@@ -134,19 +138,19 @@ app.get('/design', function (request, response) {
 
     if (request.query.apitoken && request.query.projectid) {
 
-        var api_token = request.query.apitoken;
-        var project_id = request.query.projectid;
-        var cteam_id = request.query.cteamid;
-        var synthesis_id = request.query.synthesisid;
+        const api_token = request.query.apitoken;
+        const project_id = request.query.projectid;
+        const cteam_id = request.query.cteamid;
+        const synthesis_id = request.query.synthesisid;
 
-        var cred = "Token " + api_token;
+        const cred = "Token " + api_token;
 
-        var systems = baseurl + project_id + '/systems/';
-        var design = baseurl + project_id + '/cteams/' + cteam_id + '/' + synthesis_id + '/';
-        var tags = baseurl + project_id + '/tags/';
-        var bounds = baseurl + project_id + '/bounds/';
+        const systems = baseurl + project_id + '/systems/';
+        const design = baseurl + project_id + '/cteams/' + cteam_id + '/' + synthesis_id + '/';
+        const tags = baseurl + project_id + '/tags/';
+        const bounds = baseurl + project_id + '/bounds/';
 
-        var URLS = [systems, design, tags, bounds];
+        
         let axios_instance = axios.create({
             headers: {
                 'Content-Type': 'application/json',
@@ -180,6 +184,8 @@ app.get('/design', function (request, response) {
                 "data": [systemsResponse, designResponse, tagsResponse],
                 "api_token": api_token,
                 "project_id": project_id,
+                "cteam_id": cteam_id,
+                "synthesis_id": synthesis_id,
                 "bounds": boundsResponse['bounds']
             });
             // use/access the results 
