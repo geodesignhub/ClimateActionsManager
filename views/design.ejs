@@ -358,11 +358,11 @@
 
             let first_tag_first_int = parseInt(first_tag_code.split('.')[0]);
 
-            var pattern = svgDrawing.pattern(6, 6, function (add) {
-                // add.rect(5, 5).fill(reqColor)
-                add.rect(first_tag_first_int, first_tag_first_int).fill(color)
-                add.rect(first_tag_first_int, first_tag_first_int)
-                add.rect(first_tag_first_int-1, first_tag_first_int-1).move(first_tag_first_int,first_tag_first_int)
+            var pattern = svgDrawing.pattern(6, 6, function (add) {                
+                add.line(0, 0, 6, 6).stroke({
+                    width: 1,
+                    color: color
+                })
             });
 
             style = {
