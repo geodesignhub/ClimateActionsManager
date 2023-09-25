@@ -198,7 +198,7 @@ tr.group:hover {
     background-color: #ddd !important;
 }
 #map{
-    height:400px;
+    height:380px;
 }
 /* ============================================================
   TEMPLATE
@@ -274,3 +274,29 @@ input[class=search] {
     padding:10px;
     margin:10px 0; // add top and bottom margin
   }
+
+  .inner_cont {
+    background-color: #9cfff14a;
+    flex: 1;
+    overflow: auto;
+  }
+
+  .outer_cont {
+    border: 1px dashed gray;    
+    display: flex;
+    flex-direction: column;
+  }
+  .outer_cont_max {    
+    height: 720px;
+  }
+  .outer_cont_min
+  {
+    height: 300px;
+  }
+  
+  .outer_cont h4 {
+    border-bottom: 1px dashed grey;
+    margin: 0;
+    padding: 20px;
+  }
+  

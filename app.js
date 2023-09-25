@@ -12,8 +12,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json())
 
-// var baseurl = 'http://local.test:8000/api/v1/projects/';
-var baseurl = 'https://www.geodesignhub.com/api/v1/projects/';
+var baseurl = process.env.GEODESIGNHUB_API_URL || 'http://local.test:8000/api/v1/projects/';
 
 function getSystemName(systemsResponse, diagramSystem) {
     let systemName = '';

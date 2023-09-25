@@ -28,8 +28,9 @@
             <br>
             <h1># IGC Climate Actions Manager </h1>
             <br>
-            <p>This is tool to apply multiple climate actions to diagrams in a Geodesignhub project via the <a
-                    href="http://www.geodesignhub.com/api/" target="_blank">Geodesignhub API</a>. When a new set of climate actions
+            <p>This is tool to apply single climate action to diagrams in a Geodesignhub project via the <a
+                    href="http://www.geodesignhub.com/api/" target="_blank">Geodesignhub API</a>. When a new set of
+                climate actions
                 are applied, the existing tags will be removed from the diagram. For more information, see the <a
                     href="https://geodesignhub.github.io/ClimateActionsManager">Github</a> page.</p><br>
 
@@ -39,7 +40,8 @@
     <div class="container">
         <div class="row">
             <h2>Instructions</h2><br>
-            <p>Select the diagram on the map and then select the climate actions that you want to apply on the right hand side to the. Finally dont forget to confirm your selections. </p>
+            <p>Select the diagram on the map and then select the climate actions that you want to apply on the right
+                hand side to the. Finally dont forget to confirm your selections. </p>
             <hr>
         </div>
         <div class="row">
@@ -49,12 +51,15 @@
                 <p>Click on any diagram on the map.</p>
                 <br>
                 <section>
+                    <h4 id="diagram_title"></h4>
                     <div id="map"></div>
                 </section>
 
                 <section>
                     <div id="diagrams-list">
-                        <ul class="list">
+                        
+                    <div class="outer_cont_min outer_cont">
+                        <ul class="innter_cont list">
                             <% var diag_len=data[1]['features'].length; if (diag_len !==0) { for (var j=0; j < diag_len;
                                 j++ ) { var current_feature=data[1]['features'][j]; let added_diagrams=[]; var
                                 feature_props=current_feature['properties']; var diagram_id=feature_props['diagramid'];
@@ -83,6 +88,8 @@
                                 </li>
                                 <% }} %>
                         </ul>
+                        </div>
+                        <br>
                         <br>
                         <button onclick="showAllDiagrams()">Show all Diagrams</button>
                         <br>
@@ -94,22 +101,24 @@
             <div class="column">
                 <section>
                     <h2>Step 2. Apply Climate Actions</h2>
-                    <p>A list of all climate actions defined in Geodesignhub for your project are below, select up to three climate actions.</p>
+                    <p>A list of all climate actions defined in Geodesignhub for your project are below, select up to
+                        three climate actions.</p>
                     <br>
-                    <div id="tags-list">
+                    <div class="outer_cont_max outer_cont">
+                    <div class="inner_cont" id="tags-list">
                         <ul class="list">
                             <% var tags_len=data[2].length; if (tags_len !==0) { for (var j1=0; j1 < tags_len; j1++ ) {
                                 var current_tag=data[2][j1]; %>
                                 <li>
-                                    <p id="cont-<%=current_tag.id %>"><input type="checkbox"
-                                            value="<%= current_tag.id %>" id="<%= current_tag.id %>" name="tags">
+                                    <p id="cont-<%=current_tag.id %>"><input type="radio" value="<%= current_tag.id %>"
+                                            id="<%= current_tag.id %>" name="tags">
                                         <small class="highlight">&nbsp;<%= current_tag.code %>&nbsp;</small>&nbsp;<%=
                                             current_tag.tag %>
                                     </p>
                                 </li>
                                 <% } } %>
-
                         </ul>
+                    </div>
                     </div>
                 </section>
             </div>
@@ -123,7 +132,8 @@
             <section>
                 <br>
                 <h2>Step 3: Confirm</h2>
-                <p>Submit your actions to Geodesignhub, your project will be updated with the actions you have selected.</p>
+                <p>Submit your actions to Geodesignhub, your project will be updated with the actions you have selected.
+                </p>
                 <br>
                 <form action="/bulk_update" method="POST">
                     <input type="hidden" id="map_state_ele" name="map_state_ele" value="{}">
@@ -168,7 +178,7 @@
         doubleClickZoom: false,
         attributionControl: false
     });
-    let attribution = L.control.attribution({'prefix': false});
+    let attribution = L.control.attribution({ 'prefix': false });
     attribution.addAttribution('&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>');
     attribution.addTo(map);
     let bnds = '<%= bounds %>';
@@ -198,6 +208,7 @@
             }
         });
     }
+
     function showAllDiagrams() {
         diagramsList.filter();
         map.fitBounds([[b[1], b[0]], [b[3], b[2]]]);
@@ -207,8 +218,8 @@
         for (var checkbox of checkboxes) {
             checkbox.checked = false;
         }
-
     }
+
     function miniMapstyleComp(feature) {
         var curFeature = feature.geometry.type;
         if (curFeature === 'LineString') {
@@ -320,9 +331,8 @@
         }
         return ids_list;
     }
-    function get_tag_code(tag_id){
+    function get_tag_code(tag_id) {
         let tag_code = 0;
-        
         for (let idx2 = 0; idx2 < tag_details_length; idx2++) {
             const current_tag = tag_details[idx2];
             if (current_tag.id == tag_id) {
@@ -335,13 +345,14 @@
     }
 
     function udpateMapStyle(diagram_id, new_state_str) {
+        
         let color = diagram_colors[diagram_id];
         let style = "";
         let layers = map_layers[diagram_id];
         if (new_state_str == "") {
             var fillColor = setSVGStyle(color);
             // reset to old style 
-            style ={
+            style = {
                 weight: 1,
                 stroke: true,
                 opacity: 0.9,
@@ -353,16 +364,13 @@
             };
         } else {
             let first_tag_id = new_state_str.split('|')[0];
-
             let first_tag_code = get_tag_code(first_tag_id);
-
-            let first_tag_first_int = parseInt(first_tag_code.split('.')[0]);
-
-            var pattern = svgDrawing.pattern(6, 6, function (add) {                
+            let first_tag_first_int = parseInt(first_tag_code.split('.')[0]);            
+            var pattern = svgDrawing.pattern(6, 6, function (add) {
                 add.line(0, 0, 6, 6).stroke({
                     width: 1,
                     color: color
-                })
+                });
             });
 
             style = {
@@ -376,12 +384,11 @@
                 fillOpacity: 0.8,
             };
         }
-        
+
         for (let index = 0; index < layers.length; index++) {
-                const cur_layer = layers[index];
-                
-                cur_layer.setStyle(style);
-            }
+            const cur_layer = layers[index];
+            cur_layer.setStyle(style);
+        }
     }
 
     // Render tag codes
@@ -398,6 +405,8 @@
                             const selected_diagram_id = selectedDiagram;
                             let selected_cont_id = selected_diagram_id + '-diag-cont';
                             let selected_cont = document.getElementById(selected_cont_id);
+                            // remove all existing small containers 
+                            selected_cont.querySelectorAll('small').forEach(e => { e.remove()});
                             let tag_code_small = document.createElement('small');
                             tag_code_small.id = selected_diagram_id + '-' + selected_code.code;
                             tag_code_small.classList.add('highlight');
@@ -407,7 +416,6 @@
                             let current_states = map_state[selected_diagram_id];
                             let current_state_list = [];
                             if (current_states.length > 0) {
-                                current_state_list = current_states.split('|');
                                 current_state_list.push(selected_code.id);
                             }
                             else {
@@ -419,51 +427,17 @@
                             if (filtered_list.length > 0) {
                                 new_state_str = filtered_list.join('|');
                             }
-
                             map_state[selected_diagram_id] = new_state_str;
                             udpateMapStyle(selected_diagram_id, new_state_str);
                             let map_state_cont = document.getElementById("map_state_ele");
                             map_state_cont.value = JSON.stringify(map_state);
                             break;
                         }
-
-                    }
-                }
-                else {
-                    // remove this climate action to the diagram                      
-
-                    let climate_action_id = event.currentTarget.id;
-                    for (let index = 0; index < tag_details_length; index++) {
-                        const selected_code = tag_details[index];
-                        if (selected_code.id == climate_action_id) {
-                            const selected_diagram_id = selectedDiagram;
-                            let selected_cont_id = selected_diagram_id + '-' + selected_code.code;
-                            let selected_cont = document.getElementById(selected_cont_id);
-                            selected_cont.remove();
-                            // remove code from map state
-                            let current_states = map_state[selected_diagram_id];
-                            let current_state_list = current_states.split('|');
-
-                            let new_state_list = current_state_list.filter(function (item) {
-                                return item !== selected_code.id
-                            });
-                            let new_state_str = new_state_list.join('|');
-                            map_state[selected_diagram_id] = new_state_str;
-                            udpateMapStyle(selected_diagram_id, new_state_str);
-                            let map_state_cont = document.getElementById("map_state_ele")
-                            map_state_cont.value = JSON.stringify(map_state);
-
-                            break;
-                        }
                     }
                 }
             }
         });
-
     }
 
-
-
 </script>
-
 </html>
