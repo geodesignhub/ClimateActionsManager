@@ -19,7 +19,7 @@ function getSystemName(systemsResponse, diagramSystem) {
     for (let index = 0; index < systemsResponse.length; index++) {
         const currentSystem = systemsResponse[index];
         if (currentSystem.id == diagramSystem) {
-            systemName = currentSystem.sysname;
+            systemName = currentSystem.name;
             break;
         }
     }
