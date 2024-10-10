@@ -57,37 +57,37 @@
 
                 <section>
                     <div id="diagrams-list">
-                        
-                    <div class="outer_cont_min outer_cont">
-                        <ul class="innter_cont list">
-                            <% var diag_len=data[1]['features'].length; if (diag_len !==0) { for (var j=0; j < diag_len;
-                                j++ ) { var current_feature=data[1]['features'][j]; let added_diagrams=[]; var
-                                feature_props=current_feature['properties']; var diagram_id=feature_props['diagramid'];
-                                %>
-                                <li>
 
-                                    <% if (added_diagrams.includes(diagram_id)) { } else { %>
-                                        <span class="hidden diagram_id"><%- diagram_id %></span>
-                                        <p id='<%- diagram_id %>-diag-cont'>
-                                            <%= feature_props.sysname %>
-                                                <span class="name">
-                                                    <%= feature_props.description %>
-                                                </span>
-                                                <% let tag_codes=feature_props.tag_codes; if (tag_codes) { let
-                                                    tag_codes_split=tag_codes.split("|"); for (var i=0; i <
-                                                    tag_codes_split.length; i++) { %>
+                        <div class="outer_cont_min outer_cont">
+                            <ul class="innter_cont list">
+                                <% var diag_len=data[1]['features'].length; if (diag_len !==0) { for (var j=0; j <
+                                    diag_len; j++ ) { var current_feature=data[1]['features'][j]; let added_diagrams=[];
+                                    var feature_props=current_feature['properties']; var
+                                    diagram_id=feature_props['diagramid']; %>
+                                    <li>
 
-                                                    <small id='<%- diagram_id %>-<%= tag_codes_split[i] %>'
-                                                        class="highlight">
-                                                        <%= tag_codes_split[i] %>
-                                                    </small>
+                                        <% if (added_diagrams.includes(diagram_id)) { } else { %>
+                                            <span class="hidden diagram_id"><%- diagram_id %></span>
+                                            <p id='<%- diagram_id %>-diag-cont'>
+                                                <%= feature_props.sysname %>
+                                                    <span class="name">
+                                                        <%= feature_props.description %>
+                                                    </span>
+                                                    <% let tag_codes=feature_props.tag_codes; if (tag_codes) { let
+                                                        tag_codes_split=tag_codes.split("|"); for (var i=0; i <
+                                                        tag_codes_split.length; i++) { %>
 
-                                                    <% added_diagrams.push(diagram_id); }} %>
-                                        </p>
-                                        <% } %>
-                                </li>
-                                <% }} %>
-                        </ul>
+                                                        <small id='<%- diagram_id %>-<%= tag_codes_split[i] %>'
+                                                            class="highlight">
+                                                            <%= tag_codes_split[i] %>
+                                                        </small>
+
+                                                        <% added_diagrams.push(diagram_id); }} %>
+                                            </p>
+                                            <% } %>
+                                    </li>
+                                    <% }} %>
+                            </ul>
                         </div>
                         <br>
                         <br>
@@ -105,20 +105,20 @@
                         three climate actions.</p>
                     <br>
                     <div class="outer_cont_max outer_cont">
-                    <div class="inner_cont" id="tags-list">
-                        <ul class="list">
-                            <% var tags_len=data[2].length; if (tags_len !==0) { for (var j1=0; j1 < tags_len; j1++ ) {
-                                var current_tag=data[2][j1]; %>
-                                <li>
-                                    <p id="cont-<%=current_tag.id %>"><input type="radio" value="<%= current_tag.id %>"
-                                            id="<%= current_tag.id %>" name="tags">
-                                        <small class="highlight">&nbsp;<%= current_tag.code %>&nbsp;</small>&nbsp;<%=
-                                            current_tag.tag %>
-                                    </p>
-                                </li>
-                                <% } } %>
-                        </ul>
-                    </div>
+                        <div class="inner_cont" id="tags-list">
+                            <ul class="list">
+                                <% var tags_len=data[2].length; if (tags_len !==0) { for (var j1=0; j1 < tags_len; j1++
+                                    ) { var current_tag=data[2][j1]; %>
+                                    <li>
+                                        <p id="cont-<%=current_tag.id %>"><input type="radio"
+                                                value="<%= current_tag.id %>" id="<%= current_tag.id %>" name="tags">
+                                            <small class="highlight">&nbsp;<%= current_tag.code %>&nbsp;</small>&nbsp;
+                                            <%= current_tag.tag %>
+                                        </p>
+                                    </li>
+                                    <% } } %>
+                            </ul>
+                        </div>
                     </div>
                 </section>
             </div>
@@ -182,8 +182,8 @@
     attribution.addAttribution('&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>');
     attribution.addTo(map);
     let bnds = '<%= bounds %>';
-    const design_gj = <%- JSON.stringify(data[1]) %>;
-    const tag_details = <%- JSON.stringify(data[2]) %>;
+    const design_gj = <% - JSON.stringify(data[1]) %>;
+    const tag_details = <% - JSON.stringify(data[2]) %>;
 
     let tag_details_length = tag_details.length;
     let b = bnds.split(',');
@@ -316,7 +316,9 @@
         onEachFeature: onEachFeature,
         style: miniMapstyleComp,
     }).addTo(designLayer);
-    map.fitBounds(designLayer);
+
+    let f = designLayer.getBounds();
+    map.fitBounds(f);
 
     function convert_codes_to_ids(codes_list) {
         let ids_list = [];
@@ -346,7 +348,7 @@
     }
 
     function udpateMapStyle(diagram_id, new_state_str) {
-        
+
         let color = diagram_colors[diagram_id];
         let style = "";
         let layers = map_layers[diagram_id];
@@ -366,7 +368,7 @@
         } else {
             let first_tag_id = new_state_str.split('|')[0];
             let first_tag_code = get_tag_code(first_tag_id);
-            let first_tag_first_int = parseInt(first_tag_code.split('.')[0]);            
+            let first_tag_first_int = parseInt(first_tag_code.split('.')[0]);
             var pattern = svgDrawing.pattern(6, 6, function (add) {
                 add.line(0, 0, 6, 6).stroke({
                     width: 1,
@@ -407,7 +409,7 @@
                             let selected_cont_id = selected_diagram_id + '-diag-cont';
                             let selected_cont = document.getElementById(selected_cont_id);
                             // remove all existing small containers 
-                            selected_cont.querySelectorAll('small').forEach(e => { e.remove()});
+                            selected_cont.querySelectorAll('small').forEach(e => { e.remove() });
                             let tag_code_small = document.createElement('small');
                             tag_code_small.id = selected_diagram_id + '-' + selected_code.code;
                             tag_code_small.classList.add('highlight');
@@ -441,4 +443,5 @@
     }
 
 </script>
+
 </html>
