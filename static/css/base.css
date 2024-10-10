@@ -299,4 +299,17 @@ input[class=search] {
     margin: 0;
     padding: 20px;
   }
+
+  .gray_button {
+    background-color: #e7e7e7; color: black;
+    
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+  }
+  .small {padding: 10px 24px;}
   

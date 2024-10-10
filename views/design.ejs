@@ -91,7 +91,7 @@
                         </div>
                         <br>
                         <br>
-                        <button onclick="showAllDiagrams()">Show all Diagrams</button>
+                        <button class="gray_button small" onclick="showAllDiagrams()">Show all Diagrams</button>
                         <br>
                     </div>
 
@@ -110,7 +110,7 @@
                                     ) { var current_tag=data[2][j1]; %>
                                     <li>
                                         <p id="cont-<%=current_tag.id %>"><input type="radio"
-                                                value="<%= current_tag.id %>" id="<%= current_tag.id %>" name="tags">
+                                                value="<%= current_tag.id %>" id="<%= current_tag.id %>" name="tags" disabled="disabled">
                                             <small class="highlight">&nbsp;<%= current_tag.code %>&nbsp;</small>&nbsp;
                                             <%= current_tag.tag %>
                                         </p>
@@ -216,6 +216,7 @@
         var checkboxes = document.getElementsByName('tags');
         for (var checkbox of checkboxes) {
             checkbox.checked = false;
+            checkbox.disabled = true;
         }
     }
 
@@ -294,6 +295,7 @@
                 var checkboxes = document.getElementsByName('tags');
                 for (var checkbox of checkboxes) {
                     checkbox.checked = false;
+                    checkbox.disabled = false;
                 }
                 if (tag_codes.length > 0) {
                     let tag_codes_sel = tag_codes.split('|');
