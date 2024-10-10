@@ -315,7 +315,8 @@
     L.geoJSON(design_gj, {
         onEachFeature: onEachFeature,
         style: miniMapstyleComp,
-    }).addTo(map);
+    }).addTo(designLayer);
+    map.fitBounds(designLayer);
 
     function convert_codes_to_ids(codes_list) {
         let ids_list = [];
