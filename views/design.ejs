@@ -193,7 +193,7 @@
     let selectedDiagram = 0;
     var svgDrawing = SVG().addTo('body').size(10, 10);
 
-    var designLayer = new L.FeatureGroup();
+    var designLayer = new L.FeatureGroup().addTo(map);
     var inputbaseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>',
         maxZoom: 18,
@@ -232,11 +232,12 @@
 
             };
         } else {
+            var fillColor;
             if (feature.properties.areatype == 'project') {
-                var fillColor = feature.properties.color;
-            } else { // it is policy                
-                var fillPattern = setSVGStyle(feature.properties.color);
-                var fillColor = fillPattern;
+                fillColor = feature.properties.color;
+            } else { // it is policy                                
+                fillColor = setSVGStyle(feature.properties.color);
+            
             }
 
             return {
