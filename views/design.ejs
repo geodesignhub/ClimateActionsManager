@@ -210,7 +210,9 @@
 
     function showAllDiagrams() {
         diagramsList.filter();
-        map.fitBounds([[b[1], b[0]], [b[3], b[2]]]);
+        // map.fitBounds([[b[1], b[0]], [b[3], b[2]]]);
+        
+        map.fitBounds(f);
         selectedDiagram = 0;
 
         var checkboxes = document.getElementsByName('tags');
