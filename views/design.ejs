@@ -38,12 +38,24 @@
     </div>
     <br>
     <div class="container">
+        <% if (tagCredits) { %>
+            <div class="row">
+                <h2>Credits</h2><br>
+                
+                    <% tagCredits.forEach(function(credit) { %>
+                        <p><%= credit.credit %></p>
+                    <% }); %>
+                
+                    <br>        
+            </div>
+        <% } %>
         <div class="row">
             <h2>Instructions</h2><br>
             <p>Select the diagram on the map and then select the climate actions that you want to apply on the right
                 hand side to the. Finally dont forget to confirm your selections. </p>
-            <hr>
+            <hr>            
         </div>
+
         <div class="row">
             <div class="column">
                 <br>

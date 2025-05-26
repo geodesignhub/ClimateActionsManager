@@ -131,71 +131,63 @@ app.post('/bulk_update', function (request, response) {
 app.get('/', function (request, response) {
     response.status(200).send('This is not the endpoint you are looking for.');
 });
+app.get('/design', async function (request, response) {
+    const { apitoken, projectid, cteamid, synthesisid } = request.query;
 
+    if (!apitoken || !projectid) {
+        return response.status(400).send('Not all parameters supplied.');
+    }
 
-app.get('/design', function (request, response) {
+    const api_token = apitoken;
+    const project_id = projectid;
+    const cteam_id = cteamid;
+    const synthesis_id = synthesisid;
 
-    if (request.query.apitoken && request.query.projectid) {
+    const cred = "Token " + api_token;
 
-        const api_token = request.query.apitoken;
-        const project_id = request.query.projectid;
-        const cteam_id = request.query.cteamid;
-        const synthesis_id = request.query.synthesisid;
-
-        const cred = "Token " + api_token;
-
-        const systems = baseurl + project_id + '/systems/';
-        const design = baseurl + project_id + '/cteams/' + cteam_id + '/' + synthesis_id + '/';
-        const tags = baseurl + project_id + '/tags/';
-        const bounds = baseurl + project_id + '/bounds/';
-
-        
-        let axios_instance = axios.create({
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': cred
-            }
-        });
-        const systemsRequest = axios_instance.get(systems);
-        const designRequest = axios_instance.get(design);
-        const tagsRequest = axios_instance.get(tags);
-        const boundsRequest = axios_instance.get(bounds);
-
-        axios.all([systemsRequest, designRequest, tagsRequest, boundsRequest]).then(axios.spread((...responses) => {
-            let systemsResponse = [];
-            let designResponse = [];
-            let tagsResponse = [];
-            if (responses[0].status == 200) {
-                systemsResponse = responses[0].data;
-            }
-            if (responses[1].status == 200) {
-                designResponse = responses[1].data;
-            }
-            if (responses[2].status == 200) {
-                tagsResponse = responses[2].data;
-            }
-            if (responses[3].status == 200) {
-                boundsResponse = responses[3].data;
-            }
-
-            response.render('design', {
-                "status": 1,
-                "data": [systemsResponse, designResponse, tagsResponse],
-                "api_token": api_token,
-                "project_id": project_id,
-                "cteam_id": cteam_id,
-                "synthesis_id": synthesis_id,
-                "bounds": boundsResponse['bounds']
-            });
-            // use/access the results 
-        })).catch(errors => {
-            // react on errors.
-
-            if (errors) return response.sendStatus(500);
-        });
-    } else {
-        response.status(400).send('Not all parameters supplied.');
+    const endpoints = {
+        systems: `${baseurl}${project_id}/systems/`,
+        design: `${baseurl}${project_id}/cteams/${cteam_id}/${synthesis_id}/`,
+        tags: `${baseurl}${project_id}/tags/`,
+        tagCredits: `${baseurl}${project_id}/tags/attribution/`,
+        bounds: `${baseurl}${project_id}/bounds/`
     };
+
+    const axios_instance = axios.create({
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': cred
+        }
+    });
+
+    try {
+        const [
+            systemsRes,
+            designRes,
+            tagsRes,
+            boundsRes,
+            tagCreditsRes
+        ] = await Promise.all([
+            axios_instance.get(endpoints.systems),
+            axios_instance.get(endpoints.design),
+            axios_instance.get(endpoints.tags),
+            axios_instance.get(endpoints.bounds),
+            axios_instance.get(endpoints.tagCredits)
+        ]);
+
+        response.render('design', {
+            status: 1,
+            data: [systemsRes.data, designRes.data, tagsRes.data],
+            api_token,
+            project_id,
+            tagCredits: tagCreditsRes.data,
+            cteam_id,
+            synthesis_id,
+            bounds: boundsRes.data.bounds
+        });
+    } catch (error) {
+        response.sendStatus(500);
+    }
 });
 
 app.listen(process.env.PORT || 5001);
